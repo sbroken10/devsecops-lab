@@ -1,0 +1,25 @@
+- name: Configure Database Server
+  hosts: db
+  become: yes
+  vars_files:
+    - secrets.yml
+
+  tasks:
+    - name: Ensure MySQL is installed
+      apt:
+        name: mysql-server
+        state: present
+        update_cache: yes
+
+    - name: Ensure MySQL is running
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: Set MySQL root password
+      mysql_user:
+        name: root
+        host: localhost
+        password: "{{ mysql_root_password }}"
+        login_unix_socket: /var/run/mysqld/mysqld.sock

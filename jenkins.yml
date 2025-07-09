@@ -1,0 +1,29 @@
+- name: Install Jenkins on Web VM
+  hosts: web
+  become: yes
+
+  tasks:
+    - name: Install Java (Jenkins dependency)
+      apt:
+        name: openjdk-11-jdk
+        state: present
+        update_cache: yes
+
+    - name: Add Jenkins GPG key
+      apt_key:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+        state: present
+
+    - name: Add Jenkins apt repository
+      apt_repository:
+        repo: 'deb https://pkg.jenkins.io/debian-stable binary/'
+        state: present
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install specific version of Jenkins (compatible with Ubuntu 18.04)
+      apt:
+        name: jenkins=2.277.1
+        state: present
